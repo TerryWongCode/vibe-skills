@@ -30,6 +30,25 @@ node scripts/post-tweet.js "Your tweet here!"
 
 [→ Full Documentation](./twitter-post-skill/README.md)
 
+### 📝 [Notion Sync](./notion-sync-skill)
+
+Upload and sync markdown files to Notion with rich formatting.
+
+**Features:**
+- ✅ Rich text formatting (bold, italic, code)
+- ✅ Markdown tables → Notion tables
+- ✅ Code blocks with syntax highlighting
+- ✅ Auto-detects parent pages
+
+**Quick start:**
+```bash
+cd notion-sync-skill
+npm install playwright-core
+node scripts/upload-to-notion.js document.md
+```
+
+[→ Full Documentation](./notion-sync-skill/README.md)
+
 ---
 
 ## Installation
