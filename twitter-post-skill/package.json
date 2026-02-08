@@ -1,0 +1,38 @@
+{
+  "name": "@claude-code/twitter-post-skill",
+  "version": "1.0.0",
+  "description": "Claude Code skill for automated Twitter/X.com posting using Chrome DevTools Protocol",
+  "main": "scripts/post-tweet.js",
+  "scripts": {
+    "post": "node scripts/post-tweet.js",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": [
+    "claude-code",
+    "claude-code-skill",
+    "twitter",
+    "x.com",
+    "automation",
+    "cdp",
+    "chrome-devtools-protocol",
+    "social-media",
+    "posting",
+    "playwright"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/twitter-post-skill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/twitter-post-skill/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/twitter-post-skill#readme",
+  "dependencies": {
+    "playwright-core": "^1.58.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
