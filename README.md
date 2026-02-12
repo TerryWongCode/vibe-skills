@@ -11,7 +11,7 @@ This repository contains reusable skills for [Claude Code](https://code.claude.c
 
 ## Skills Collection
 
-### 🐦 [Twitter Post](./twitter-post-skill)
+### 🐦 [Twitter Post](./twitter-post)
 
 Automate Twitter/X.com posting using Chrome DevTools Protocol.
 
@@ -23,14 +23,14 @@ Automate Twitter/X.com posting using Chrome DevTools Protocol.
 
 **Quick start:**
 ```bash
-cd twitter-post-skill
+cd twitter-post
 npm install
 node scripts/post-tweet.js "Your tweet here!"
 ```
 
-[→ Full Documentation](./twitter-post-skill/README.md)
+[→ Full Documentation](./twitter-post/README.md)
 
-### 📝 [Notion Sync](./notion-sync-skill)
+### 📝 [Notion Sync](./notion-sync)
 
 Upload and sync markdown files to Notion using the official Notion MCP server.
 
@@ -52,7 +52,7 @@ claude mcp add --transport http notion https://mcp.notion.com/mcp
 # "Upload document.md to Notion with a better title"
 ```
 
-[→ Full Documentation](./notion-sync-skill/README.md)
+[→ Full Documentation](./notion-sync/README.md)
 
 ---
 
@@ -77,8 +77,8 @@ Create a `.claude/skills/` directory and symlink the skills:
 mkdir -p .claude/skills
 
 # Symlink individual skills
-ln -s ../../notion-sync-skill .claude/skills/notion-sync
-ln -s ../../twitter-post-skill .claude/skills/twitter-post
+ln -s ../../notion-sync .claude/skills/notion-sync
+ln -s ../../twitter-post .claude/skills/twitter-post
 
 # Skills are now installed and will reflect any changes automatically
 ```
@@ -92,8 +92,8 @@ Copy skills to your Claude Code skills directory:
 cp -r vibe-skills/* ~/.claude/skills/
 
 # Or install individual skill
-cp -r vibe-skills/twitter-post-skill ~/.claude/skills/twitter-post
-cp -r vibe-skills/notion-sync-skill ~/.claude/skills/notion-sync
+cp -r vibe-skills/twitter-post ~/.claude/skills/twitter-post
+cp -r vibe-skills/notion-sync ~/.claude/skills/notion-sync
 ```
 
 ### MCP Server Setup (for Notion Sync)
@@ -122,7 +122,7 @@ Claude will automatically detect and use the appropriate skill.
 
 ```
 vibe-skills/
-├── twitter-post-skill/      # Twitter automation
+├── twitter-post/           # Twitter automation
 │   ├── SKILL.md            # Claude Code skill definition
 │   ├── README.md           # Documentation
 │   ├── scripts/            # Automation scripts

@@ -30,8 +30,8 @@ A reusable [Claude Code](https://code.claude.com) skill that enables automated p
 
 1. **Clone this repository**:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/twitter-post-skill.git
-   cd twitter-post-skill
+   git clone https://github.com/YOUR_USERNAME/vibe-skills.git
+   cd vibe-skills/twitter-post
    ```
 
 2. **Install dependencies**:
@@ -65,7 +65,7 @@ node scripts/post-tweet.js "Your tweet text here!"
 
 1. Copy this skill to your Claude Code skills directory:
    ```bash
-   cp -r twitter-post-skill ~/.claude/skills/twitter-post
+   cp -r twitter-post ~/.claude/skills/twitter-post
    ```
 
 2. Ask Claude to post tweets:
@@ -213,8 +213,8 @@ MIT License - see [LICENSE](LICENSE) file for details
 ## Support
 
 - 📖 [Documentation](./SKILL.md)
-- 🐛 [Issue Tracker](https://github.com/YOUR_USERNAME/twitter-post-skill/issues)
-- 💬 [Discussions](https://github.com/YOUR_USERNAME/twitter-post-skill/discussions)
+- 🐛 [Issue Tracker](https://github.com/YOUR_USERNAME/vibe-skills/issues)
+- 💬 [Discussions](https://github.com/YOUR_USERNAME/vibe-skills/discussions)
 
 ## Author
 
