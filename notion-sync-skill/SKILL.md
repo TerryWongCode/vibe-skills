@@ -1,11 +1,11 @@
 ---
 name: notion-sync
-description: Upload and sync markdown files to Notion with proper formatting. Use when users want to upload markdown documents to Notion, sync local markdown to Notion pages, or convert markdown content to Notion format with rich text formatting (bold, italic, code), tables, headings, and code blocks.
+description: Upload and sync markdown files to Notion using the official Notion MCP server. Use when users want to upload markdown documents to Notion, sync local markdown to Notion pages, or convert markdown content to Notion format. Supports automatic title generation from file content when requested.
 ---
 
 # Notion Sync
 
-Upload markdown files to Notion with full formatting support including bold text, tables, code blocks, and more.
+Upload markdown files to Notion using the official Notion MCP server with full formatting support.
 
 ## When to Use
 
@@ -14,66 +14,95 @@ Use this skill when the user wants to:
 - Sync local documentation to Notion pages
 - Convert markdown to Notion format
 - Create Notion pages from markdown content
+- Rename/retitle pages based on content analysis
 
 ## Prerequisites
 
-1. **Notion API Key**: User must have a Notion integration API key
-2. **Parent Page Access**: The integration must be connected to at least one page in the workspace
+The Notion MCP server must be configured in Claude Code with proper authentication.
 
 ## Setup Instructions
 
-If the API key is not configured, guide the user through setup:
+### First-Time Setup
 
-```bash
-# Save API key
-mkdir -p ~/.config/notion
-echo "your_notion_api_key" > ~/.config/notion/api_key
-```
+1. **Add Notion MCP Server** (if not already configured):
+   ```bash
+   claude mcp add --transport http notion https://mcp.notion.com/mcp
+   ```
 
-**Getting a Notion API Key:**
-1. Go to https://notion.so/my-integrations
-2. Click "New integration"
-3. Copy the API key (starts with `ntn_` or `secret_`)
+2. **Authenticate with Notion**:
+   After adding the server, run `/mcp` in a Claude Code session to complete OAuth authentication.
+   You'll be redirected to Notion to authorize access to your workspace.
 
-**Connecting to a Page:**
-1. Open a page in your Notion workspace
-2. Click "..." menu (top right)
-3. Click "Connect to" or "Add connections"
-4. Select your integration
+3. **Verify Connection**:
+   Run `/mcp` again to see the available Notion MCP tools.
+
+### Checking Configuration
+
+To check if Notion MCP is already configured, run `/mcp` in the session.
+If you see Notion tools listed (like `create-pages`, `search`, etc.), the setup is complete.
 
 ## Usage
 
-To upload a markdown file to Notion:
+Simply ask to upload a markdown file to Notion. Examples:
 
-```bash
-node .claude/skills/notion-sync/scripts/upload-to-notion.js <markdown-file> [parent-page-id]
-```
+- "Upload document.md to Notion"
+- "Sync README.md to Notion"
+- "Create a Notion page from analysis.md"
+- "Upload report.md to Notion and rename it based on the content"
+- "Upload this file to Notion with a better title"
 
-**Arguments:**
-- `<markdown-file>`: Path to the markdown file to upload (required)
-- `[parent-page-id]`: Optional parent page ID. If omitted, uses the first accessible page
+## Workflow
 
-**Examples:**
+When a user requests to upload markdown to Notion:
 
-```bash
-# Auto-detect parent page
-node .claude/skills/notion-sync/scripts/upload-to-notion.js document.md
-
-# Specify parent page
-node .claude/skills/notion-sync/scripts/upload-to-notion.js document.md abc123-def456-...
-```
+1. **Check MCP Configuration**: Verify Notion MCP server is connected (check `/mcp` output)
+2. **If not configured**: Guide user through setup steps above
+3. **Read the markdown file**: Load the file contents
+4. **Determine title**:
+   - If user asked to rename based on content: Analyze the file and generate an appropriate title
+   - Otherwise: Use the first H1 heading or filename as the title
+5. **Upload to Notion**: Use the MCP `create-pages` tool with:
+   - `properties`: Set the title
+   - `content`: Pass the full markdown content (Notion-flavored Markdown)
+   - `parent` (optional): Specify a parent page ID if provided by the user
+6. **Return URL**: Provide the user with the created Notion page URL
 
 ## Supported Markdown Features
 
-The script converts:
-- **Headings**: `#`, `##`, `###` → Heading 1, 2, 3
-- **Bold**: `**text**` → Bold formatting
-- **Italic**: `*text*` → Italic formatting
-- **Inline code**: `` `code` `` → Code formatting
-- **Code blocks**: ` ```language ` → Notion code blocks with syntax highlighting
-- **Tables**: Markdown tables → Notion table blocks with headers
-- **Lists**: Bulleted (`-`, `*`) and numbered (`1.`) lists
-- **Dividers**: `---` → Horizontal divider
+Notion-flavored Markdown supports:
+- **Headings**: `#`, `##`, `###` (h1, h2, h3)
+- **Bold**: `**text**`
+- **Italic**: `*text*`
+- **Strikethrough**: `~~text~~`
+- **Inline code**: `` `code` ``
+- **Code blocks**: ` ```language ` with syntax highlighting
+- **Links**: `[text](url)`
+- **Lists**: Bulleted (`-`, `*`) and numbered (`1.`)
+- **Tables**: Markdown tables with headers
+- **Block quotes**: `> quote`
+- **Dividers**: `---`
+
+## MCP Tools Used
+
+This skill primarily uses the **`create-pages`** tool from Notion MCP:
+
+**Parameters:**
+- `properties` (required): JSON object with at least a "title" property
+  ```json
+  {"title": "Page Title"}
+  ```
+- `content` (required): String containing Notion-flavored Markdown
+- `parent` (optional): Parent page/database ID where the page should be created
+  - If omitted, creates a private page at workspace level
+
+**Example tool call:**
+```json
+{
+  "properties": {"title": "My Document"},
+  "content": "# My Document\n\nThis is the content...",
+  "parent": "page_id_here"
+}
+```
 
 ## Finding Page IDs
 
@@ -81,42 +110,44 @@ The script converts:
 - Page URL: `https://notion.so/Page-Title-abc123def456...`
 - Page ID: `abc123def456...` (the part after the title)
 
-**Via API Search:**
-The script automatically searches for accessible pages if no parent ID is provided.
+**Via MCP search tool:**
+Users can search for pages using the Notion MCP `search` tool if needed.
 
-## Workflow
+## Automatic Title Generation
 
-When a user requests to upload markdown to Notion:
+When the user requests to rename or generate a title based on content:
 
-1. **Check API key**: Verify `~/.config/notion/api_key` exists
-2. **If not configured**: Guide user through setup steps above
-3. **Run upload script**: Execute with the markdown file path
-4. **Return URL**: Provide the user with the Notion page URL
+1. **Read the file**: Load the markdown content
+2. **Analyze content**: Examine the file to understand its purpose and main topic
+3. **Generate title**: Create a concise, descriptive title (under 70 characters)
+4. **Upload with new title**: Use the generated title instead of the original filename
 
 ## Notes
 
-- The script uses Notion API version `2025-09-03`
-- Rate limit: ~3 requests/second (handled automatically)
-- Tables are created as native Notion table blocks
-- The first H1 heading becomes the page title
-- Long content is automatically chunked (100 blocks per request)
-- All formatting is preserved through Notion's rich text API
+- Rate limit: 180 requests per minute (3 requests per second) across all MCP tool calls
+- Notion MCP uses the API version `2025-09-03`
+- The MCP server is optimized for AI workflows with efficient Markdown-based content
+- Up to 100 blocks can be created per request
+- All formatting is preserved through Notion-flavored Markdown
 
 ## Common Issues
 
-**"No pages found" error:**
-- User needs to connect their integration to at least one page
-- See "Connecting to a Page" in Setup Instructions
+**"Notion MCP not configured" error:**
+- Run `claude mcp add --transport http notion https://mcp.notion.com/mcp`
+- Then run `/mcp` to authenticate
 
-**"API Error 401":**
-- Invalid API key
-- Re-check the key at https://notion.so/my-integrations
+**"Authentication required" error:**
+- Run `/mcp` to complete OAuth flow
+- Follow the browser redirect to authorize access
 
-**Tables not rendering:**
-- Ensure table has proper markdown format with header separator
-- Example:
-  ```markdown
-  | Header 1 | Header 2 |
-  |----------|----------|
-  | Cell 1   | Cell 2   |
-  ```
+**"No parent page found" error:**
+- Either provide a specific parent page ID
+- Or omit the parent to create a private page at workspace level
+
+## Benefits of MCP Approach
+
+- No custom Node.js script to maintain
+- Direct OAuth authentication (no manual API key management)
+- Leverages Claude Code's built-in MCP support
+- More efficient token usage with Markdown format
+- Access to all Notion MCP tools (search, update, etc.)

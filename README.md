@@ -32,19 +32,24 @@ node scripts/post-tweet.js "Your tweet here!"
 
 ### 📝 [Notion Sync](./notion-sync-skill)
 
-Upload and sync markdown files to Notion with rich formatting.
+Upload and sync markdown files to Notion using the official Notion MCP server.
 
 **Features:**
-- ✅ Rich text formatting (bold, italic, code)
+- ✅ MCP-based (no custom scripts needed)
+- ✅ OAuth authentication (no manual API keys)
+- ✅ Rich text formatting (bold, italic, code, strikethrough)
 - ✅ Markdown tables → Notion tables
 - ✅ Code blocks with syntax highlighting
-- ✅ Auto-detects parent pages
+- ✅ Smart title generation from content
+- ✅ Built-in Claude Code integration
 
 **Quick start:**
 ```bash
-cd notion-sync-skill
-npm install playwright-core
-node scripts/upload-to-notion.js document.md
+# One-time setup
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+
+# Then just ask Claude:
+# "Upload document.md to Notion with a better title"
 ```
 
 [→ Full Documentation](./notion-sync-skill/README.md)
@@ -59,13 +64,26 @@ node scripts/upload-to-notion.js document.md
 # Clone the repository
 git clone https://github.com/YOUR_USERNAME/vibe-skills.git
 cd vibe-skills
-
-# Install individual skill
-cd twitter-post-skill
-npm install
 ```
 
 ### Install to Claude Code
+
+#### Option 1: Symlink (Recommended for Development)
+
+Create a `.claude/skills/` directory and symlink the skills:
+
+```bash
+# From the vibe-skills directory
+mkdir -p .claude/skills
+
+# Symlink individual skills
+ln -s ../../notion-sync-skill .claude/skills/notion-sync
+ln -s ../../twitter-post-skill .claude/skills/twitter-post
+
+# Skills are now installed and will reflect any changes automatically
+```
+
+#### Option 2: Copy (For Production Use)
 
 Copy skills to your Claude Code skills directory:
 
@@ -75,6 +93,19 @@ cp -r vibe-skills/* ~/.claude/skills/
 
 # Or install individual skill
 cp -r vibe-skills/twitter-post-skill ~/.claude/skills/twitter-post
+cp -r vibe-skills/notion-sync-skill ~/.claude/skills/notion-sync
+```
+
+### MCP Server Setup (for Notion Sync)
+
+The Notion Sync skill requires the Notion MCP server:
+
+```bash
+# Add Notion MCP server
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+
+# Authenticate (run this in a Claude Code session)
+/mcp
 ```
 
 ## Usage with Claude Code
