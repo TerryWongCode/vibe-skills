@@ -62,7 +62,7 @@ claude mcp add --transport http notion https://mcp.notion.com/mcp
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/vibe-skills.git
+git clone https://github.com/TerryWongCode/vibe-skills.git
 cd vibe-skills
 ```
 
@@ -164,7 +164,7 @@ Planned skills:
 - 🎨 Image processing
 - 🤖 Workflow automation
 
-Have an idea? [Open an issue](https://github.com/YOUR_USERNAME/vibe-skills/issues)!
+Have an idea? [Open an issue](https://github.com/TerryWongCode/vibe-skills/issues)!
 
 ## Requirements
 
@@ -181,8 +181,8 @@ Individual skills may have additional license terms - check each skill's directo
 ## Community
 
 - 📖 [Documentation](./docs)
-- 🐛 [Issue Tracker](https://github.com/YOUR_USERNAME/vibe-skills/issues)
-- 💬 [Discussions](https://github.com/YOUR_USERNAME/vibe-skills/discussions)
+- 🐛 [Issue Tracker](https://github.com/TerryWongCode/vibe-skills/issues)
+- 💬 [Discussions](https://github.com/TerryWongCode/vibe-skills/discussions)
 - 🌟 [Claude Code Community](https://code.claude.com)
 
 ## Acknowledgments

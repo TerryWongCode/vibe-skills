@@ -19,16 +19,16 @@
     "posting",
     "playwright"
   ],
-  "author": "Your Name",
+  "author": "Terry Wong",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/twitter-post-skill.git"
+    "url": "https://github.com/TerryWongCode/twitter-post-skill.git"
   },
   "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/twitter-post-skill/issues"
+    "url": "https://github.com/TerryWongCode/twitter-post-skill/issues"
   },
-  "homepage": "https://github.com/YOUR_USERNAME/twitter-post-skill#readme",
+  "homepage": "https://github.com/TerryWongCode/twitter-post-skill#readme",
   "dependencies": {
     "playwright-core": "^1.58.1"
   },

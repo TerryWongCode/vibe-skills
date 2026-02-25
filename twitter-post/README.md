@@ -30,7 +30,7 @@ A reusable [Claude Code](https://code.claude.com) skill that enables automated p
 
 1. **Clone this repository**:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/vibe-skills.git
+   git clone https://github.com/TerryWongCode/vibe-skills.git
    cd vibe-skills/twitter-post
    ```
 
@@ -213,8 +213,8 @@ MIT License - see [LICENSE](LICENSE) file for details
 ## Support
 
 - 📖 [Documentation](./SKILL.md)
-- 🐛 [Issue Tracker](https://github.com/YOUR_USERNAME/vibe-skills/issues)
-- 💬 [Discussions](https://github.com/YOUR_USERNAME/vibe-skills/discussions)
+- 🐛 [Issue Tracker](https://github.com/TerryWongCode/vibe-skills/issues)
+- 💬 [Discussions](https://github.com/TerryWongCode/vibe-skills/discussions)
 
 ## Author
 

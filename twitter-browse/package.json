@@ -1,0 +1,30 @@
+{
+    "name": "@claude-code/twitter-browse-skill",
+    "version": "1.0.0",
+    "description": "Claude Code skill for automated Twitter/X.com browsing and extraction using Chrome DevTools Protocol",
+    "main": "scripts/browse-x.js",
+    "scripts": {
+        "browse": "node scripts/browse-x.js",
+        "test": "echo \"No tests yet\" && exit 0"
+    },
+    "keywords": [
+        "claude-code",
+        "claude-code-skill",
+        "twitter",
+        "x.com",
+        "automation",
+        "cdp",
+        "chrome-devtools-protocol",
+        "social-media",
+        "browsing",
+        "playwright"
+    ],
+    "author": "Terry Wong",
+    "license": "MIT",
+    "dependencies": {
+        "playwright-core": "^1.58.1"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    }
+}
