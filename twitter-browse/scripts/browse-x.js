@@ -8,15 +8,16 @@
 
 const playwright = require('playwright-core');
 
-// Get search query and pages from command line arguments (optional)
+// Get search query and target tweet count from command line arguments (optional)
 const args = process.argv.slice(2);
 let SEARCH_QUERY = '';
-let PAGES = 5;
+let TARGET_COUNT = 20; // default: collect 20 tweets
+const MAX_SCROLLS = 200; // safety cap to avoid infinite loops
 
 if (args.length > 0) {
     const lastArg = args[args.length - 1];
     if (/^\d+$/.test(lastArg)) {
-        PAGES = parseInt(lastArg, 10);
+        TARGET_COUNT = parseInt(lastArg, 10);
         SEARCH_QUERY = args.slice(0, -1).join(' ');
     } else {
         SEARCH_QUERY = args.join(' ');
@@ -89,11 +90,11 @@ async function extractTweets(page) {
     // Wait a bit for React to render the timeline
     await page.waitForTimeout(4000);
 
-    console.log(`📜 Scrolling ${PAGES} times to load content and extracting tweets...`);
+    console.log(`📜 Scrolling until ${TARGET_COUNT} unique tweets are collected (max ${MAX_SCROLLS} scrolls)...`);
 
     const uniqueTweets = new Map();
 
-    for (let i = 0; i < PAGES; i++) {
+    for (let i = 0; i < MAX_SCROLLS; i++) {
         try {
             // Extract what is currently visible
             const currentBatch = await page.evaluate(() => {
@@ -131,12 +132,18 @@ async function extractTweets(page) {
             // console.log(`⚠️ Ignored context destruction error on scroll ${i}`);
         }
 
+        // Stop once we have enough tweets
+        if (uniqueTweets.size >= TARGET_COUNT) {
+            console.log(`🎯 Reached target of ${TARGET_COUNT} tweets after ${i + 1} scrolls.`);
+            break;
+        }
+
         // Scroll down
         await page.mouse.wheel(0, 1000);
         await page.waitForTimeout(1500);
     }
 
-    const allTweets = Array.from(uniqueTweets.values());
+    const allTweets = Array.from(uniqueTweets.values()).slice(0, TARGET_COUNT);
 
     if (allTweets.length === 0) {
         console.log('⚠️ No tweets found. Ensure you are logged in and the page loaded correctly.');
