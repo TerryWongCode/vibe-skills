@@ -136,10 +136,10 @@ async function postToPage(page) {
   console.log('✓ Text entered');
   await page.waitForTimeout(1500);
 
-  console.log('🚀 Posting tweet using keyboard shortcut (Cmd+Enter)...');
+  console.log('🚀 Posting tweet by clicking the Post button...');
 
-  // Use keyboard shortcut Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux)
-  await page.keyboard.press('Meta+Enter');
+  // Click the Post button directly (more reliable than keyboard shortcut)
+  await page.click('button[data-testid="tweetButton"]');
 
   await page.waitForTimeout(3000);
 
