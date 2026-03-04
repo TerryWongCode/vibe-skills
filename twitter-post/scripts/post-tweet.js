@@ -2,18 +2,26 @@
 
 /**
  * Post a tweet to X.com (Twitter) using Chrome CDP
- * Usage: node post-tweet.js "Your tweet text here"
+ * Usage: node post-tweet.js "Your tweet text here" [image_path]
+ * 
+ * Arguments:
+ *   1. Tweet text (required, max 280 characters)
+ *   2. Image path (optional) - local file path to image
  */
 
 const playwright = require('playwright-core');
+const path = require('path');
+const fs = require('fs');
 
-// Get tweet text from command line argument
+// Get tweet text and optional image from command line arguments
 const TWEET_TEXT = process.argv[2];
+const IMAGE_PATH = process.argv[3];
 
 if (!TWEET_TEXT) {
-  console.error('Usage: node post-tweet.js "Your tweet text here"');
-  console.error('\nExample:');
+  console.error('Usage: node post-tweet.js "Your tweet text here" [image_path]');
+  console.error('\nExamples:');
   console.error('  node post-tweet.js "Hello, Twitter!"');
+  console.error('  node post-tweet.js "Check out this meme!" "/path/to/image.png"');
   process.exit(1);
 }
 
@@ -24,6 +32,15 @@ console.log(`📝 Tweet length: ${charCount} characters`);
 if (charCount > 280) {
   console.warn(`⚠️  Warning: Tweet is ${charCount - 280} characters over the 280 limit`);
   console.warn('   X.com may reject this tweet or truncate it');
+}
+
+// Check if image file exists
+if (IMAGE_PATH) {
+  if (!fs.existsSync(IMAGE_PATH)) {
+    console.error(`❌ Error: Image file not found: ${IMAGE_PATH}`);
+    process.exit(1);
+  }
+  console.log(`📷 Image: ${IMAGE_PATH}`);
 }
 
 async function postTweet() {
@@ -108,6 +125,59 @@ async function postToPage(page) {
 
   await page.waitForTimeout(1500);
 
+  // Upload image if provided
+  if (IMAGE_PATH) {
+    console.log('📷 Adding image to tweet...');
+    
+    // Find the file input element
+    // X.com has a hidden file input that we need to use
+    const fileInputSelector = 'input[type="file"][accept*="image"]';
+    
+    try {
+      // Wait for the media button to be available and click it first
+      const mediaButtonSelectors = [
+        'button[aria-label="Add photos or video"]',
+        'button[data-testid="mediaUploadButton"]',
+        'div[aria-label="Add photos or video"]'
+      ];
+      
+      for (const selector of mediaButtonSelectors) {
+        try {
+          await page.click(selector, { timeout: 3000 });
+          console.log('✓ Clicked media button');
+          await page.waitForTimeout(1000);
+          break;
+        } catch (e) {
+          // Try next selector
+        }
+      }
+      
+      // Try to find and use the file input
+      const fileInput = await page.$(fileInputSelector);
+      if (fileInput) {
+        await fileInput.setInputFiles(IMAGE_PATH);
+        console.log('✓ Image file selected');
+        await page.waitForTimeout(2000);
+      } else {
+        // Alternative: use the media button's file input
+        const mediaInputs = await page.$$('input[type="file"]');
+        for (const input of mediaInputs) {
+          try {
+            await input.setInputFiles(IMAGE_PATH);
+            console.log('✓ Image file selected (alternative method)');
+            await page.waitForTimeout(2000);
+            break;
+          } catch (e) {
+            // Try next input
+          }
+        }
+      }
+    } catch (error) {
+      console.warn(`⚠️  Could not upload image: ${error.message}`);
+      console.warn('   Continuing with text-only tweet...');
+    }
+  }
+
   console.log('📝 Finding text area...');
 
   // Find the text area
@@ -134,6 +204,13 @@ async function postToPage(page) {
   }
 
   console.log('✓ Text entered');
+  
+  // Wait for any media to upload
+  if (IMAGE_PATH) {
+    console.log('⏳ Waiting for image to upload...');
+    await page.waitForTimeout(3000);
+  }
+  
   await page.waitForTimeout(1500);
 
   console.log('🚀 Posting tweet by clicking the Post button...');
@@ -148,6 +225,9 @@ async function postToPage(page) {
   console.log('\n📱 Tweet content:');
   console.log('─'.repeat(50));
   console.log(TWEET_TEXT);
+  if (IMAGE_PATH) {
+    console.log(`\n📷 Attached image: ${IMAGE_PATH}`);
+  }
   console.log('─'.repeat(50));
 }
 

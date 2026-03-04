@@ -50,23 +50,27 @@ npm install playwright-core
 To post a tweet:
 
 ```bash
-node .claude/skills/twitter-post/scripts/post-tweet.js "Your tweet text here"
+node scripts/post-tweet.js "Your tweet text here"
 ```
 
 **Arguments:**
 - `<tweet-text>`: The text content of the tweet (required, max 280 characters)
+- `<image-path>`: Optional path to an image file to attach
 
 **Examples:**
 
 ```bash
 # Simple tweet
-node .claude/skills/twitter-post/scripts/post-tweet.js "Hello, world!"
+node scripts/post-tweet.js "Hello, world!"
 
 # Tweet with URL
-node .claude/skills/twitter-post/scripts/post-tweet.js "Check out this article: https://example.com"
+node scripts/post-tweet.js "Check out this article: https://example.com"
+
+# Tweet with image
+node scripts/post-tweet.js "Check out this meme!" "/path/to/image.png"
 
 # Multi-line tweet (use quotes)
-node .claude/skills/twitter-post/scripts/post-tweet.js "Line 1
+node scripts/post-tweet.js "Line 1
 
 Line 2
 
@@ -77,6 +81,7 @@ Line 3"
 
 - ✅ **Keyboard Shortcut Posting**: Uses `Cmd+Enter` (Mac) or `Ctrl+Enter` (Windows/Linux) for reliable posting
 - ✅ **Character-by-Character Typing**: Properly triggers X.com's React validation
+- ✅ **Image Upload Support**: Attach images to tweets (PNG, JPG, GIF supported)
 - ✅ **Automatic Dialog Handling**: Dismisses any blocking dialogs
 - ✅ **Error Recovery**: Handles common automation issues gracefully
 - ✅ **280 Character Limit**: Validates tweet length before posting
